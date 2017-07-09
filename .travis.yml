@@ -1,0 +1,15 @@
+dist: trusty
+sudo: false
+
+language: bash
+
+addons:
+  apt:
+    sources:
+      - debian-sid    # Grab ShellCheck from the Debian repo
+    packages:
+      - shellcheck
+
+script:
+  - shellcheck vsm || echo "There could be something wrong..."
+  - ./vsm

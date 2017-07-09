@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+
+# Exit immediately if a command exits with a non-zero status.
+set -e
+
+app_dir="${HOME}/Downloads"
+
+mkdir -p "$app_dir"
+cd "$app_dir"
+
+if arch | grep -q 64; then
+  arch="x64"
+else
+  arch="ia32"
+fi
+
+app_foldername="VSCode-linux-${arch}"
+app="${app_foldername}/bin/code-insiders"
+
+server_url="https://vscode-update.azurewebsites.net/latest/linux-${arch}/insider"
+local_version=$($app -v 2> /dev/null | tail -n 1)
+header_filename="insider-header"
+
+if [[ -n $TRAVIS ]] || [[ "$1" == "-q" ]] || (echo "$1" | grep -q "^[yY]") ; then
+  quiet=1
+fi
+
+function ask2close {
+  vscode_id=$(pgrep code-insiders 2> /dev/null | head -n 1)
+  if [[ -n $vscode_id ]]; then
+
+    if [[ -z $quiet ]]; then
+      echo -e "VSCode is open! Wanna close it & proceed? [y/n]: \c"
+      read -r input
+    else
+      echo "VSCode is open! It'll be closed & reopened again!"
+      input="yes"
+    fi
+
+    case $input in
+      [yY]* )
+        kill "$vscode_id"
+        reopen=1
+        ;;
+
+      * )
+        echo "Abort closing VSCode..."
+        echo "Note: the archived file isn't extracted!"
+        exit
+        ;;
+    esac
+  fi
+}
+
+function removeOldFiles {
+  if [[ -d $app_foldername ]]; then
+    echo "Removing old files..."
+    rm -rf "$app_foldername"
+  fi
+}
+
+function extractVS {
+  echo "Extracting..."
+  tar xf insider
+}
+
+function reopenVS {
+  echo "VSCode is ready for your code!"
+
+  if [[ -n $reopen ]]; then
+    $app
+  fi
+}
+
+if [[ -f insider ]]; then
+  local_filesize=$(ls -l insider | cut -d " " -f 5)
+fi
+
+echo "Checking the server..."
+curl -s -I -L --post302 --output $header_filename $server_url
+
+server_filesize=$(tail $header_filename | sed 's/\r$//' | grep "Length" | cut -d " " -f 2)
+
+server_version=$(grep "Location" $header_filename | cut -d "/" -f 5)
+
+if [[ "$local_version" == "$server_version" ]]; then
+  echo "You have the latest version!"
+  exit
+fi
+
+if [[ "$local_filesize" == "$server_filesize" ]]; then
+  echo "You have the latest version but the archived file should be extracted!"
+
+else
+  rm -rf insider
+  echo "Downloading..."
+
+  if [[ -n $TRAVIS ]]; then
+    wget -q -m --no-directories $server_url
+  else
+    wget -q -m --no-directories --show-progress $server_url
+  fi
+fi
+
+ask2close
+
+removeOldFiles
+
+extractVS
+
+reopenVS
