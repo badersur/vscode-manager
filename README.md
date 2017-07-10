@@ -45,10 +45,6 @@ I hope you'll find it useful!
 
 Yes, please! You're more than welcome :)
 
-## Copyright
-
-Copyright 2017, Bader Nasser Al-Hashmi (@BaderSur)
-
 ## Thanks
 
 1. [The Bad Tutorials](https://www.youtube.com/channel/UCEpe5DhhS0HYFBaCVsU2Iwg) for the awesome
@@ -57,3 +53,7 @@ Copyright 2017, Bader Nasser Al-Hashmi (@BaderSur)
 2. [ShellCheck](https://github.com/koalaman/shellcheck/)
 
 3. [vscode-shellcheck](https://github.com/timonwong/vscode-shellcheck)
+
+## License
+
+MIT © [Bader Nasser Al-Hashmi](https://github.com/BaderSur)
