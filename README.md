@@ -11,7 +11,6 @@ Anyways, I learned more about shell scripting while writing this script and I'll
 
 I hope you'll find it useful!
 
-**Note:** The build failure is intended and the script is working ;)
 
 ## Usage
 
@@ -43,9 +42,11 @@ I hope you'll find it useful!
  ./vsm
  ```
 
+
 ## Issues & PRs?
 
 Yes, please! You're more than welcome :)
+
 
 ## Thanks
 
@@ -55,6 +56,7 @@ Yes, please! You're more than welcome :)
 2. [ShellCheck](https://github.com/koalaman/shellcheck/)
 
 3. [vscode-shellcheck](https://github.com/timonwong/vscode-shellcheck)
+
 
 ## License
 
