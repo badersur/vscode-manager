@@ -73,6 +73,7 @@ function reopenVS {
 }
 
 if [[ -f insider ]]; then
+  # shellcheck disable=SC2012
   local_filesize=$(ls -l insider | cut -d " " -f 5)
 fi
 
