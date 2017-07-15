@@ -11,5 +11,5 @@ addons:
       - shellcheck
 
 script:
-  - shellcheck vsm || echo "There could be something wrong..."
+  - shellcheck vsm
   - ./vsm
